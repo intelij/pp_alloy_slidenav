@@ -110,13 +110,13 @@ function Controller() {
     }
     function addShadowBorder() {
         var OPEN_LEFT = .84 * Ti.Platform.displayCaps.platformWidth;
-        var border = Ti.UI.createView({
+        border = Ti.UI.createView({
             width: "2dp",
             left: OPEN_LEFT - 2,
             backgroundColor: "#333"
         });
         $.ds.leftMenu.add(border);
-        var shadow = Ti.UI.createView({
+        shadow = Ti.UI.createView({
             width: "11dp",
             left: OPEN_LEFT - 11,
             backgroundImage: "/images/shadow.png"
@@ -151,6 +151,8 @@ function Controller() {
     $.win.title = "Propertypond";
     var isHome = true;
     var currentView = null;
+    var border = null;
+    var shadow = null;
     createMenu();
     addLogo();
     addShadowBorder();
@@ -160,6 +162,8 @@ function Controller() {
     Ti.App.addEventListener("reloadHomeView", function() {
         tableData = [];
         menuTableView.setData([]);
+        $.ds.leftMenu.remove(shadow);
+        $.ds.leftMenu.remove(border);
         createMenu();
         addLogo();
         addShadowBorder();

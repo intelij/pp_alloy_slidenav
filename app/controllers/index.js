@@ -14,6 +14,9 @@ $.win.title = 'Propertypond';
 var isHome = true;
 var currentView = null;
 
+var border = null;
+var shadow = null;
+
 function createMenu() {
 	role = Ti.App.Properties.getString('role');
 	
@@ -159,13 +162,13 @@ function addLogo() {
 function addShadowBorder(){
 	/*-- Add Shadow and Border --*/
 	var OPEN_LEFT = Ti.Platform.displayCaps.platformWidth * 0.84;
-	var border = Ti.UI.createView({
+	border = Ti.UI.createView({
 		width : '2dp',
 		left : OPEN_LEFT - 2,
 		backgroundColor : '#333'
 	});
 	$.ds.leftMenu.add(border);
-	var shadow = Ti.UI.createView({
+	shadow = Ti.UI.createView({
 		width : '11dp',
 		left : OPEN_LEFT - 11,
 		backgroundImage : '/images/shadow.png'
@@ -188,9 +191,13 @@ Ti.App.addEventListener("sliderToggled", function(e) {
 Ti.App.addEventListener('reloadHomeView', function(e){
 	tableData = [];
 	menuTableView.setData([]);
+	$.ds.leftMenu.remove(shadow);
+	$.ds.leftMenu.remove(border);
+	
 	createMenu();
 	addLogo();
 	addShadowBorder();
+	
 	$.ds.contentview.remove(currentView);
 	currentView = Alloy.createController("home").getView();
 	$.ds.contentview.add(currentView);
