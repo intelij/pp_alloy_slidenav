@@ -23,12 +23,6 @@ function Controller() {
         id: "leftMenu"
     });
     $.__views.containerview.add($.__views.leftMenu);
-    $.__views.leftTableView = Ti.UI.createTableView({
-        rowHeight: "44dp",
-        top: 100,
-        id: "leftTableView"
-    });
-    $.__views.leftMenu.add($.__views.leftTableView);
     $.__views.movableview = Ti.UI.createView({
         left: "0",
         zIndex: "3",
@@ -65,15 +59,18 @@ function Controller() {
     var hasSlided = false;
     var direction = "reset";
     var OPEN_LEFT = .84 * Ti.Platform.displayCaps.platformWidth;
+    $.leftMenu.applyProperties({
+        width: OPEN_LEFT
+    });
     var animateRight = Ti.UI.createAnimation({
         left: OPEN_LEFT,
         curve: Ti.UI.ANIMATION_CURVE_EASE_OUT,
-        duration: 150
+        duration: 250
     });
     var animateReset = Ti.UI.createAnimation({
         left: 0,
         curve: Ti.UI.ANIMATION_CURVE_EASE_OUT,
-        duration: 150
+        duration: 250
     });
     Alloy.CFG.mainWindow = $.mainWindow;
     var Slider = {
@@ -83,33 +80,27 @@ function Controller() {
                 y: e.y
             }, $.containerview);
             var newLeft = coords.x - touchStartX;
-            newLeft > 0 && OPEN_LEFT > newLeft && ($.movableview.left = newLeft);
+            newLeft > 0 && 250 > newLeft && ($.movableview.left = newLeft);
             hasSlided = newLeft >= 150 ? true : false;
-            Ti.API.debug("-----------------------------------------------");
-            Ti.API.debug(Ti.Platform.displayCaps.platformWidth);
-            Ti.API.debug(newLeft);
-            Ti.API.debug("-----------------------------------------------");
         },
         touchEnd: function() {
-            if ($.movableview.left >= 150 && hasSlided) {
-                direction = "right";
-                $.movableview.animate(animateRight);
-            } else if (150 >= $.movableview.left && !hasSlided) {
-                direction = "reset";
-                $.movableview.animate(animateReset);
-            }
+            $.movableview.left >= 150 && hasSlided ? Slider.showHideMenu(true) : 150 >= $.movableview.left && !hasSlided && Slider.showHideMenu(false);
             Slider.fireSliderToggledEvent(hasSlided, direction);
         },
-        toggleMenuButton: function() {
-            if (hasSlided) {
-                direction = "reset";
-                $.movableview.animate(animateReset);
-                hasSlided = false;
-            } else {
+        showHideMenu: function(show) {
+            show = show || false;
+            if (show) {
+                hasSlided = true;
                 direction = "right";
                 $.movableview.animate(animateRight);
-                hasSlided = true;
+            } else {
+                hasSlided = false;
+                direction = "reset";
+                $.movableview.animate(animateReset);
             }
+        },
+        toggleMenuButton: function() {
+            hasSlided ? Slider.showHideMenu(false) : Slider.showHideMenu(true);
             Slider.fireSliderToggledEvent(hasSlided, direction);
         },
         fireSliderToggledEvent: function(hasSlided, direction) {
@@ -122,7 +113,7 @@ function Controller() {
     Alloy.CFG.mainNavGroup = $.mainNavGroup;
     var button = Ti.UI.createButton({
         backgroundImage: "none",
-        image: "/pp.sliderMenu/button.png",
+        image: "/pp.sliderMenu/ButtonMenu.png",
         right: "0",
         top: "0",
         width: "60",
@@ -130,6 +121,9 @@ function Controller() {
     });
     button.addEventListener("click", Slider.toggleMenuButton);
     $.mainWindow.leftNavButton = button;
+    $.mainWindow.addEventListener("click", function() {
+        Slider.showHideMenu(false);
+    });
     $.mainWindow.addEventListener("touchstart", function(e) {
         touchStartX = e.x;
     });
@@ -142,21 +136,6 @@ function Controller() {
     exports.toggleLeftSlider = function() {
         Slider.toggleMenuButton();
     };
-    $.leftMenu.applyProperties({
-        width: OPEN_LEFT
-    });
-    var border = Ti.UI.createView({
-        width: "2dp",
-        right: 0,
-        backgroundColor: "#333"
-    });
-    $.leftMenu.add(border);
-    var shadow = Ti.UI.createView({
-        width: "11dp",
-        left: OPEN_LEFT - 11,
-        backgroundImage: "/images/shadow.png"
-    });
-    $.leftMenu.add(shadow);
     _.extend($, exports);
 }
 

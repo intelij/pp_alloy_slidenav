@@ -1,6 +1,7 @@
 var Position = require('Position');
 var userModel = require('services/User');
 $.loginButton.title = 'Login';
+$.loginButton.setEnabled(false);
 $.loginWin.navBarHidden = false;
 
  /**

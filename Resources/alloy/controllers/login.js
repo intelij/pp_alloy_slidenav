@@ -111,6 +111,7 @@ function Controller() {
     var Position = require("Position");
     var userModel = require("services/User");
     $.loginButton.title = "Login";
+    $.loginButton.setEnabled(false);
     $.loginWin.navBarHidden = false;
     var enableButton = function() {
         "" != $.usernameTxt.getValue() && "" != $.passwordTxt.getValue() ? $.loginButton.setEnabled(true) : $.loginButton.setEnabled(false);

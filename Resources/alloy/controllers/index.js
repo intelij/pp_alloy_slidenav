@@ -1,5 +1,5 @@
 function Controller() {
-    function createSection() {
+    function createMenu() {
         role = Ti.App.Properties.getString("role");
         var ppSection = Ti.UI.createTableViewSection({
             headerTitle: "Your Propertypond"
@@ -50,7 +50,13 @@ function Controller() {
             title: "Search Rentals",
             image: "/images/icons/grey-arrow.png"
         };
-        discoverSection.add(Alloy.createController("menurow", argsSearch).getView());
+        var searchView = Alloy.createController("menurow", argsSearch).getView();
+        searchView.addEventListener("click", function() {
+            $.ds.contentview.remove(currentView);
+            currentView = Alloy.createController("view1").getView();
+            $.ds.contentview.add(currentView);
+        });
+        discoverSection.add(searchView);
         tableData.push(discoverSection);
         var informationSection = Ti.UI.createTableViewSection({
             headerTitle: "Information"
@@ -64,7 +70,58 @@ function Controller() {
             informationSection.add(Alloy.createController("menurow", argsInfo).getView());
         }
         tableData.push(informationSection);
-        $.ds.leftTableView.data = tableData;
+        menuTableView = Alloy.createController("menu").getView();
+        menuTableView.setData(tableData);
+        menuTableView.addEventListener("click", function() {
+            isHome = false;
+            $.ds.toggleLeftSlider();
+        });
+        var storedRowTitle = null;
+        menuTableView.addEventListener("touchstart", function(e) {
+            storedRowTitle = e.row.customTitle;
+            storedRowTitle.color = "#FFF";
+        });
+        menuTableView.addEventListener("touchend", function() {
+            storedRowTitle.color = "#666";
+        });
+        menuTableView.addEventListener("scroll", function() {
+            null != storedRowTitle && (storedRowTitle.color = "#666");
+        });
+        var storedRowTitle = null;
+        $.ds.leftMenu.add(menuTableView);
+    }
+    function addLogo() {
+        var logoView = Ti.UI.createView({
+            top: "24dp",
+            height: "70dp",
+            width: "121dp",
+            left: .84 * Ti.Platform.displayCaps.platformWidth / 2 - 60.5,
+            backgroundImage: "/images/logo-lrg.png"
+        });
+        logoView.addEventListener("click", function() {
+            if (!isHome) {
+                $.ds.contentview.remove(currentView);
+                currentView = Alloy.createController("home").getView();
+                $.ds.contentview.add(currentView);
+            }
+            $.ds.toggleLeftSlider();
+        });
+        $.ds.leftMenu.add(logoView);
+    }
+    function addShadowBorder() {
+        var OPEN_LEFT = .84 * Ti.Platform.displayCaps.platformWidth;
+        var border = Ti.UI.createView({
+            width: "2dp",
+            left: OPEN_LEFT - 2,
+            backgroundColor: "#333"
+        });
+        $.ds.leftMenu.add(border);
+        var shadow = Ti.UI.createView({
+            width: "11dp",
+            left: OPEN_LEFT - 11,
+            backgroundImage: "/images/shadow.png"
+        });
+        $.ds.leftMenu.add(shadow);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -88,51 +145,26 @@ function Controller() {
     var util = require("utilities");
     util.init();
     var tableData = [];
+    var menuTableView = null;
     var ppmoreinfo = require("ppmoreinfo");
     var role = null;
     $.win.title = "Propertypond";
     var isHome = true;
-    var logoView = Ti.UI.createView({
-        top: "24dp",
-        height: "70dp",
-        width: "121dp",
-        left: .84 * Ti.Platform.displayCaps.platformWidth / 2 - 60.5,
-        backgroundImage: "/images/logo-lrg.png"
-    });
-    logoView.addEventListener("click", function() {
-        if (!isHome) {
-            $.ds.contentview.remove(currentView);
-            currentView = Alloy.createController("home").getView();
-            $.ds.contentview.add(currentView);
-        }
-        $.ds.toggleLeftSlider();
-    });
-    $.ds.leftMenu.add(logoView);
-    createSection();
-    var currentView = Alloy.createController("home").getView();
+    var currentView = null;
+    createMenu();
+    addLogo();
+    addShadowBorder();
+    currentView = Alloy.createController("home").getView();
     $.ds.contentview.add(currentView);
-    $.ds.leftTableView.addEventListener("click", function() {
-        isHome = false;
-        $.ds.toggleLeftSlider();
-    });
-    var storedRowTitle = null;
-    $.ds.leftTableView.addEventListener("touchstart", function(e) {
-        storedRowTitle = e.row.customTitle;
-        storedRowTitle.color = "#FFF";
-    });
-    $.ds.leftTableView.addEventListener("touchend", function() {
-        storedRowTitle.color = "#666";
-    });
-    $.ds.leftTableView.addEventListener("scroll", function() {
-        null != storedRowTitle && (storedRowTitle.color = "#666");
-    });
-    var storedRowTitle = null;
     Ti.App.addEventListener("sliderToggled", function() {});
     Ti.App.addEventListener("reloadHomeView", function() {
         tableData = [];
-        $.ds.leftTableView.setData([]);
-        createSection();
-        var currentView = Alloy.createController("home").getView();
+        menuTableView.setData([]);
+        createMenu();
+        addLogo();
+        addShadowBorder();
+        $.ds.contentview.remove(currentView);
+        currentView = Alloy.createController("home").getView();
         $.ds.contentview.add(currentView);
     });
     "iphone" === Ti.Platform.osname ? $.win.open({

@@ -1,0 +1,5 @@
+"#leftTableView": {
+	rowHeight : '44dp',
+	top : 100,
+	zIndex : 1
+}

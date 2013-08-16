@@ -1,7 +1,6 @@
 <Alloy>
 	<View id="containerview">
 		<View id="leftMenu">
-			<TableView id="leftTableView" />
 		</View>
 		<View id="movableview">
 			<Window platform='ios' formFactor='tablet,handheld'>

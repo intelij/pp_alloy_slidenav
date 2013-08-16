@@ -38,8 +38,4 @@
 	width : Ti.Platform.displayCaps.platformWidth,
 	height : "44",
 	backgroundImage : '/pp.sliderMenu/NavBackground.png'
-},
-"#leftTableView": {
-	rowHeight : '44dp',
-	top : 100
 }
