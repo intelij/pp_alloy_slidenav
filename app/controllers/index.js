@@ -158,8 +158,6 @@ function createMenu() {
 
 createMenu();
 
-currentView = Alloy.createController("home").getView();
-$.ds.contentview.add(currentView);
 
 Ti.App.addEventListener("sliderToggled", function(e) {
 	
@@ -175,6 +173,10 @@ Ti.App.addEventListener('reloadHomeView', function(e){
 	currentView = Alloy.createController("home").getView();
 	$.ds.contentview.add(currentView);
 });
+
+/* Load Initial View */
+currentView = Alloy.createController("home").getView();
+$.ds.contentview.add(currentView);
 
 
 if (Ti.Platform.osname === 'iphone')
