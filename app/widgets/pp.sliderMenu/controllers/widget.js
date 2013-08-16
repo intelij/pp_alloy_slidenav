@@ -2,7 +2,8 @@ var touchStartX = 0;
 var hasSlided = false;
 var direction = "reset";
 var OPEN_LEFT = Ti.Platform.displayCaps.platformWidth * 0.84;
-
+var border = null;
+var shadow = null;
 
 $.leftMenu.applyProperties({
 	width : OPEN_LEFT,
@@ -132,4 +133,30 @@ if(OS_ANDROID){
 
 exports.toggleLeftSlider = function() {
 	Slider.toggleMenuButton();
+}
+
+function applyshadowborder(){
+	border = Ti.UI.createView({
+		width : '2dp',
+		left : OPEN_LEFT - 2,
+		backgroundColor : '#333'
+	});
+	$.leftMenu.add(border);
+	shadow = Ti.UI.createView({
+		width : '11dp',
+		left : OPEN_LEFT - 11,
+		backgroundImage : '/pp.sliderMenu/shadow.png'
+	});
+	$.leftMenu.add(shadow);
+}
+
+exports.addMenus = function(menuView) {
+	$.leftMenu.add(menuView);
+	applyshadowborder();
+}
+
+exports.removeMenus = function(menuView){
+	$.leftMenu.remove(menuView);
+	$.leftMenu.remove(border);
+	$.leftMenu.remove(shadow);
 }

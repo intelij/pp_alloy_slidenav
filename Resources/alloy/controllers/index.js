@@ -88,9 +88,6 @@ function Controller() {
             null != storedRowTitle && (storedRowTitle.color = "#666");
         });
         var storedRowTitle = null;
-        $.ds.leftMenu.add(menuTableView);
-    }
-    function addLogo() {
         var logoView = Ti.UI.createView({
             top: "24dp",
             height: "70dp",
@@ -106,22 +103,10 @@ function Controller() {
             }
             $.ds.toggleLeftSlider();
         });
-        $.ds.leftMenu.add(logoView);
-    }
-    function addShadowBorder() {
-        var OPEN_LEFT = .84 * Ti.Platform.displayCaps.platformWidth;
-        border = Ti.UI.createView({
-            width: "2dp",
-            left: OPEN_LEFT - 2,
-            backgroundColor: "#333"
-        });
-        $.ds.leftMenu.add(border);
-        shadow = Ti.UI.createView({
-            width: "11dp",
-            left: OPEN_LEFT - 11,
-            backgroundImage: "/images/shadow.png"
-        });
-        $.ds.leftMenu.add(shadow);
+        menuContainer = Ti.UI.createView();
+        menuContainer.add(logoView);
+        menuContainer.add(menuTableView);
+        $.ds.addMenus(menuContainer);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -151,22 +136,16 @@ function Controller() {
     $.win.title = "Propertypond";
     var isHome = true;
     var currentView = null;
-    var border = null;
-    var shadow = null;
+    var menuContainer = null;
     createMenu();
-    addLogo();
-    addShadowBorder();
     currentView = Alloy.createController("home").getView();
     $.ds.contentview.add(currentView);
     Ti.App.addEventListener("sliderToggled", function() {});
     Ti.App.addEventListener("reloadHomeView", function() {
         tableData = [];
         menuTableView.setData([]);
-        $.ds.leftMenu.remove(shadow);
-        $.ds.leftMenu.remove(border);
+        $.ds.removeMenus(menuContainer);
         createMenu();
-        addLogo();
-        addShadowBorder();
         $.ds.contentview.remove(currentView);
         currentView = Alloy.createController("home").getView();
         $.ds.contentview.add(currentView);

@@ -13,7 +13,7 @@ var role = null;
 $.win.title = 'Propertypond';
 var isHome = true;
 var currentView = null;
-
+var menuContainer = null;
 var border = null;
 var shadow = null;
 
@@ -132,11 +132,6 @@ function createMenu() {
 	
 	// Set row title highlight colour (right table view)
 	var storedRowTitle = null;
-	
-	$.ds.leftMenu.add(menuTableView);
-}
-
-function addLogo() {
 	var logoView = Ti.UI.createView({
 	    top: '24dp',
 	    height: '70dp',
@@ -154,32 +149,14 @@ function addLogo() {
 		
 		$.ds.toggleLeftSlider();
 	});
+	menuContainer = Ti.UI.createView();
+	menuContainer.add(logoView);
+	menuContainer.add(menuTableView);
 	
-	$.ds.leftMenu.add(logoView);
-}
-
-
-function addShadowBorder(){
-	/*-- Add Shadow and Border --*/
-	var OPEN_LEFT = Ti.Platform.displayCaps.platformWidth * 0.84;
-	border = Ti.UI.createView({
-		width : '2dp',
-		left : OPEN_LEFT - 2,
-		backgroundColor : '#333'
-	});
-	$.ds.leftMenu.add(border);
-	shadow = Ti.UI.createView({
-		width : '11dp',
-		left : OPEN_LEFT - 11,
-		backgroundImage : '/images/shadow.png'
-	});
-	$.ds.leftMenu.add(shadow);
-	/*-- End Shadow and Border --*/
+	$.ds.addMenus(menuContainer);
 }
 
 createMenu();
-addLogo();
-addShadowBorder();
 
 currentView = Alloy.createController("home").getView();
 $.ds.contentview.add(currentView);
@@ -191,12 +168,8 @@ Ti.App.addEventListener("sliderToggled", function(e) {
 Ti.App.addEventListener('reloadHomeView', function(e){
 	tableData = [];
 	menuTableView.setData([]);
-	$.ds.leftMenu.remove(shadow);
-	$.ds.leftMenu.remove(border);
-	
+	$.ds.removeMenus(menuContainer);
 	createMenu();
-	addLogo();
-	addShadowBorder();
 	
 	$.ds.contentview.remove(currentView);
 	currentView = Alloy.createController("home").getView();

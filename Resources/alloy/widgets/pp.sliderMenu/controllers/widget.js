@@ -5,6 +5,20 @@ function WPATH(s) {
 }
 
 function Controller() {
+    function applyshadowborder() {
+        border = Ti.UI.createView({
+            width: "2dp",
+            left: OPEN_LEFT - 2,
+            backgroundColor: "#333"
+        });
+        $.leftMenu.add(border);
+        shadow = Ti.UI.createView({
+            width: "11dp",
+            left: OPEN_LEFT - 11,
+            backgroundImage: "/pp.sliderMenu/shadow.png"
+        });
+        $.leftMenu.add(shadow);
+    }
     new (require("alloy/widget"))("pp.sliderMenu");
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -59,6 +73,8 @@ function Controller() {
     var hasSlided = false;
     var direction = "reset";
     var OPEN_LEFT = .84 * Ti.Platform.displayCaps.platformWidth;
+    var border = null;
+    var shadow = null;
     $.leftMenu.applyProperties({
         width: OPEN_LEFT
     });
@@ -135,6 +151,15 @@ function Controller() {
     });
     exports.toggleLeftSlider = function() {
         Slider.toggleMenuButton();
+    };
+    exports.addMenus = function(menuView) {
+        $.leftMenu.add(menuView);
+        applyshadowborder();
+    };
+    exports.removeMenus = function(menuView) {
+        $.leftMenu.remove(menuView);
+        $.leftMenu.remove(border);
+        $.leftMenu.remove(shadow);
     };
     _.extend($, exports);
 }
