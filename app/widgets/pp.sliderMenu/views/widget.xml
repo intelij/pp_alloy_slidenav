@@ -1,0 +1,22 @@
+<Alloy>
+	<View id="containerview">
+		<View id="leftMenu">
+			<TableView id="leftTableView" />
+		</View>
+		<View id="movableview">
+			<Window platform='ios' formFactor='tablet,handheld'>
+				<NavigationGroup id="mainNavGroup" >
+					<Window title="Window 1" id="mainWindow">
+						<View id="contentview" />
+					</Window>
+				</NavigationGroup>
+			</Window>
+			<View id="shadowview"  platform='android' formFactor='tablet,handheld'>
+				<View id="navview">
+					<Button id="leftButton" />
+				</View>
+				<View id="contentview" />
+			</View>
+		</View>
+	</View>
+</Alloy>

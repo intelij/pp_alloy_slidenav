@@ -1,0 +1,5 @@
+<Alloy>
+	<Window id="newWins" navBarHidden="false" zIndex="1000" backgroundColor="white">
+		<Label text="test" />
+	</Window>
+</Alloy>

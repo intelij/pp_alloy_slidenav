@@ -1,0 +1,10 @@
+<Alloy>
+	<Window id="accountWin" navBarHidden="false">
+		<RightNavButton>
+            <Button title="Back" onClick="closeWindow" />
+        </RightNavButton>
+		<View>
+			<Button id="logout" title="Logout" />
+		</View>
+	</Window>
+</Alloy>

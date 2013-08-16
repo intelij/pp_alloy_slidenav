@@ -1,0 +1,15 @@
+"Label": {
+  color: "#666",
+  font: {
+    fontSize: "13"
+  }
+},
+"#icon": {
+  width: "38dp"
+},
+"#title": {
+  left: "2dp"
+},
+"#row": {
+  height : "25dp"
+}
